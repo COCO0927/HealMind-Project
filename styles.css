@@ -1,0 +1,67 @@
+/* --- 全局样式 & 玻璃效果 --- */
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: 
+        radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+    background-color: #0f172a;
+    color: #f8fafc;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.MainContainer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* 渐变文字 */
+.TextGradient {
+    background: linear-gradient(to right, #60a5fa, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 玻璃拟态面板 */
+.GlassPanel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    padding: 24px;
+}
+
+/* 导航按钮 */
+.nav-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+.nav-link:hover { color: white; }
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .MainContainer { padding: 1rem; }
+}
+
+/* --- 情绪日历专属补丁 --- */
+.calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.calendar-day {
+    aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; position: relative;
+    cursor: pointer; transition: 0.3s; border: 1px solid transparent;
+}
+.calendar-day:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+.calendar-day.active { border-color: #f472b6; background: rgba(244, 114, 182, 0.1); }
+.calendar-day.today { background: rgba(96, 165, 250, 0.2); }
+.day-num { position: absolute; top: 8px; right: 10px; font-size: 0.75rem; color: #64748b; }
+.day-mood { font-size: 2rem; }

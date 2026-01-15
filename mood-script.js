@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initEmoji() {
     const container = document.getElementById("emojiOptions");
-    container.innerHTML = ""; // 清空防止重复生成
+    container.innerHTML = ""; 
     emojis.forEach(e => {
         const btn = document.createElement("button");
         btn.className = "bg-slate-800 p-2 rounded-lg text-xl hover:bg-slate-700 transition border-2 border-transparent";
@@ -38,40 +38,41 @@ function render() {
 
     const first = new Date(y, m, 1).getDay();
     const days = new Date(y, m + 1, 0).getDate();
-
-    for(let i=0; i<first; i++) cal.appendChild(document.createElement("div"));
-
     const todayStr = new Date().toISOString().split('T')[0];
 
+    // 填充空白格子
+    for(let i=0; i<first; i++) cal.appendChild(document.createElement("div"));
+
+    // 渲染日期格子
     for(let d=1; d<=days; d++) {
-        for(let d=1; d<=days; d++) {
         const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const cell = document.createElement("div");
         cell.className = "calendar-day";
         
-        const isFuture = dateStr > todayStr; // 判断是否是未来
+        const isFuture = dateStr > todayStr; 
 
-        // --- 修改后的颜色逻辑 ---
+        // --- 核心颜色逻辑 ---
         if (moodData[dateStr]) {
             if (isFuture) {
-                // 如果是未来且有数据(Note)，使用紫色
+                // 未来日期有Note -> 紫色
                 cell.classList.add("future-note-cell");
             } else {
-                // 如果是今天或过去，才根据压力值判断颜色
-                const s = parseInt(moodData[dateStr].stress);
+                // 过去或今天 -> 根据压力值显示红黄绿
+                const s = parseInt(moodData[dateStr].stress || 5);
                 if (s <= 3) cell.classList.add("stress-low");
                 else if (s <= 7) cell.classList.add("stress-mid");
                 else cell.classList.add("stress-high");
             }
         }
 
-        // 选中和今天的状态保持不变
+        // 选中状态 (Active)
         if (dateStr === selectedDateStr) cell.classList.add("active");
+        // 今天状态
         if (dateStr === todayStr) cell.classList.add("today");
         
         cell.innerHTML = `<span class="day-num">${d}</span>`;
         
-        // 渲染表情（未来日期通常没有表情）
+        // 显示表情 (如果有)
         if (moodData[dateStr] && moodData[dateStr].emoji) {
             const mDiv = document.createElement("div");
             mDiv.className = "day-mood";
@@ -79,10 +80,11 @@ function render() {
             cell.appendChild(mDiv);
         }
 
+        // 点击事件
         cell.onclick = () => {
             selectedDateStr = dateStr;
             updateEditorUI(dateStr); 
-            render(); 
+            render(); // 关键：点击后立即重绘，显示 active 效果
         };
         cal.appendChild(cell);
     }
@@ -95,7 +97,6 @@ function updateEditorUI(dateStr) {
     const todayStr = new Date().toISOString().split('T')[0];
     const isFuture = dateStr > todayStr;
 
-    // 更新编辑器的值
     document.getElementById("stressLevel").value = data.stress;
     document.getElementById("stressVal").innerText = data.stress;
     document.getElementById("dailyNote").value = data.note;
@@ -104,20 +105,18 @@ function updateEditorUI(dateStr) {
     const stressArea = document.getElementById("stressLevel");
     
     if (isFuture) {
-        // 未来日期：禁用表情和压力条
         emojiArea.classList.add("u-disabled");
         stressArea.disabled = true;
         stressArea.classList.add("u-disabled");
-        selectedEmoji = ""; // 清空选中
+        selectedEmoji = ""; 
     } else {
-        // 过去/现在：启用
         emojiArea.classList.remove("u-disabled");
         stressArea.disabled = false;
         stressArea.classList.remove("u-disabled");
         selectedEmoji = data.emoji;
     }
     
-    // 更新表情按钮的高亮
+    // 更新左侧表情按钮的高亮状态
     Array.from(emojiArea.children).forEach(btn => {
         btn.style.borderColor = (btn.innerText === selectedEmoji && selectedEmoji !== "") ? "#f472b6" : "transparent";
     });
@@ -129,17 +128,13 @@ function save() {
     const todayStr = new Date().toISOString().split('T')[0];
     const isFuture = selectedDateStr > todayStr;
 
-    // 存储数据
     moodData[selectedDateStr] = {
-        emoji: isFuture ? "" : selectedEmoji, // 未来日期不存表情
-        stress: isFuture ? 5 : document.getElementById("stressLevel").value, // 未来日期存默认压力
+        emoji: isFuture ? "" : selectedEmoji, 
+        stress: isFuture ? 5 : document.getElementById("stressLevel").value, 
         note: document.getElementById("dailyNote").value
     };
     
     localStorage.setItem("moodData", JSON.stringify(moodData));
     render();
-    
-    // 成功反馈
-    const msg = isFuture ? "Future Note Saved!" : "Mood & Notes Saved Successfully!";
-    alert(msg);
+    alert(isFuture ? "Future Note Saved!" : "Mood Saved Successfully!");
 }

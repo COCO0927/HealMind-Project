@@ -40,26 +40,33 @@ function render() {
 
     for(let i=0; i<first; i++) cal.appendChild(document.createElement("div"));
 
+  //改了这个函数
     for(let d=1; d<=days; d++) {
         const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const cell = document.createElement("div");
         cell.className = "calendar-day";
+        
+        // --- 新增：根据压力值改变颜色 ---
+        if (moodData[dateStr]) {
+            const s = parseInt(moodData[dateStr].stress);
+            if (s <= 3) cell.classList.add("stress-low");
+            else if (s <= 7) cell.classList.add("stress-mid");
+            else cell.classList.add("stress-high");
+        }
+
         if (dateStr === selectedDateStr) cell.classList.add("active");
         
         cell.innerHTML = `<span class="day-num">${d}</span>`;
-        if (moodData[dateStr]) {
+        if (moodData[dateStr] && moodData[dateStr].emoji) {
             const mDiv = document.createElement("div");
             mDiv.className = "day-mood";
             mDiv.innerText = moodData[dateStr].emoji;
             cell.appendChild(mDiv);
         }
+
         cell.onclick = () => {
             selectedDateStr = dateStr;
-            document.getElementById("displayDate").innerText = dateStr;
-            const data = moodData[dateStr] || {emoji:"", stress:5, note:""};
-            document.getElementById("stressLevel").value = data.stress;
-            document.getElementById("stressVal").innerText = data.stress;
-            document.getElementById("dailyNote").value = data.note;
+            updateEditorUI(dateStr); // 调用新封装的 UI 更新函数
             render();
         };
         cal.appendChild(cell);

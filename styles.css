@@ -76,3 +76,9 @@ body {
     margin-bottom: 10px;
     display: none; /* 默认隐藏 */
 }
+
+/* 未来 Note 的专属颜色：靛蓝色，区别于红黄绿 */
+.future-note-cell { 
+    background: rgba(129, 140, 248, 0.2) !important; 
+    border-color: rgba(129, 140, 248, 0.4) !important; 
+}

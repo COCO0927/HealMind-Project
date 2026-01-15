@@ -17,7 +17,6 @@ body {
     padding: 2rem;
 }
 
-/* 渐变文字 */
 .TextGradient {
     background: linear-gradient(to right, #60a5fa, #c084fc);
     -webkit-background-clip: text;
@@ -25,52 +24,55 @@ body {
     -webkit-text-fill-color: transparent;
 }
 
-/* 玻璃拟态面板 */
 .GlassPanel {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
     padding: 24px;
 }
 
-/* 导航按钮 */
-.nav-link {
-    color: #94a3b8;
-    text-decoration: none;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: 0.3s;
-}
+.nav-link { color: #94a3b8; text-decoration: none; font-size: 0.9rem; transition: 0.3s; }
 .nav-link:hover { color: white; }
 
-/* 响应式调整 */
-@media (max-width: 768px) {
-    .MainContainer { padding: 1rem; }
-}
-
-/* --- 情绪日历专属补丁 --- */
+/* --- 日历格子基础样式 --- */
 .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
 .calendar-day {
     aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border-radius: 12px;
     display: flex; align-items: center; justify-content: center; position: relative;
-    cursor: pointer; transition: 0.3s; border: 1px solid transparent;
+    cursor: pointer; transition: all 0.2s ease; border: 2px solid transparent;
 }
-.calendar-day:hover { transform: translateY(-5px); background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
-.calendar-day.active { border-color: #f472b6; background: rgba(244, 114, 182, 0.1); }
-.calendar-day.today { background: rgba(96, 165, 250, 0.2); }
+
+/* 重点：选中状态的强提醒 */
+.calendar-day.active { 
+    border-color: #f472b6 !important; 
+    background: rgba(244, 114, 182, 0.15) !important;
+    box-shadow: 0 0 15px rgba(244, 114, 182, 0.4);
+    transform: scale(1.02);
+}
+
+.calendar-day.today { background: rgba(96, 165, 250, 0.1); border: 1px dashed rgba(96, 165, 250, 0.5); }
 .day-num { position: absolute; top: 8px; right: 10px; font-size: 0.75rem; color: #64748b; }
 .day-mood { font-size: 2rem; }
 
-//新增
-/* 压力程度对应的格子背景色 (带透明度的玻璃感) */
-.stress-low { background: rgba(74, 222, 128, 0.2) !important; border-color: rgba(74, 222, 128, 0.4) !important; }    /* 绿色 */
-.stress-mid { background: rgba(250, 204, 21, 0.2) !important; border-color: rgba(250, 204, 21, 0.4) !important; }    /* 黄色 */
-.stress-high { background: rgba(248, 113, 113, 0.2) !important; border-color: rgba(248, 113, 113, 0.4) !important; } /* 红色 */
+/* 压力背景色 */
+.stress-low { background: rgba(74, 222, 128, 0.15) !important; }
+.stress-mid { background: rgba(250, 204, 21, 0.15) !important; }
+.stress-high { background: rgba(248, 113, 113, 0.15) !important; }
 
-/* 禁用状态的样式 */
-.u-disabled { opacity: 0.3; pointer-events: none; cursor: not-allowed; }
+/* 禁用状态：不仅变灰，且彻底禁止点击 */
+.u-disabled { 
+    opacity: 0.2 !important; 
+    pointer-events: none !important; 
+    filter: grayscale(1);
+    cursor: not-allowed !important;
+}
+
+/* 未来日期提示文字 */
+#future-hint {
+    font-size: 0.75rem;
+    color: #facc15;
+    margin-bottom: 10px;
+    display: none; /* 默认隐藏 */
+}

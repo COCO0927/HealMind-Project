@@ -84,3 +84,57 @@ function save() {
     render();
     alert("Mood Saved!");
 }
+
+//新增函数
+function updateEditorUI(dateStr) {
+    document.getElementById("displayDate").innerText = dateStr;
+    const data = moodData[dateStr] || {emoji:"", stress:5, note:""};
+    
+    // 获取当前日期字符串进行比较
+    const todayStr = new Date().toISOString().split('T')[0];
+    const isFuture = dateStr > todayStr;
+
+    // 1. 设置数值
+    document.getElementById("stressLevel").value = data.stress;
+    document.getElementById("stressVal").innerText = data.stress;
+    document.getElementById("dailyNote").value = data.note;
+
+    // 2. 控制权限：如果是未来日期，禁用心情和压力选择
+    const emojiArea = document.getElementById("emojiOptions");
+    const stressArea = document.getElementById("stressLevel");
+    
+    if (isFuture) {
+        emojiArea.classList.add("u-disabled");
+        stressArea.disabled = true;
+        stressArea.classList.add("u-disabled");
+    } else {
+        emojiArea.classList.remove("u-disabled");
+        stressArea.disabled = false;
+        stressArea.classList.remove("u-disabled");
+    }
+    
+    // 更新选中的表情高亮
+    selectedEmoji = data.emoji;
+    Array.from(emojiArea.children).forEach(btn => {
+        btn.style.borderColor = (btn.innerText === selectedEmoji) ? "#f472b6" : "transparent";
+    });
+}
+
+// 修改原来的 save 函数，增加对未来日期的安全过滤
+function save() {
+    if(!selectedDateStr) return alert("Select a date!");
+    
+    const todayStr = new Date().toISOString().split('T')[0];
+    const isFuture = selectedDateStr > todayStr;
+
+    moodData[selectedDateStr] = {
+        // 如果是未来日期，强制表情为空，压力为默认5（或者保持原样）
+        emoji: isFuture ? "" : selectedEmoji,
+        stress: isFuture ? 5 : document.getElementById("stressLevel").value,
+        note: document.getElementById("dailyNote").value
+    };
+    
+    localStorage.setItem("moodData", JSON.stringify(moodData));
+    render();
+    alert(isFuture ? "Note saved for future!" : "Mood & Note saved!");
+}

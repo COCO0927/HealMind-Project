@@ -47,38 +47,26 @@ body {
 /* 重点：选中状态的强提醒 */
 .calendar-day.active { 
     border-color: #f472b6 !important; 
-    background: rgba(244, 114, 182, 0.15) !important;
-    box-shadow: 0 0 15px rgba(244, 114, 182, 0.4);
-    transform: scale(1.02);
+    background: rgba(244, 114, 182, 0.2) !important;
+    box-shadow: 0 0 15px rgba(244, 114, 182, 0.5);
+    transform: scale(1.05); /* 点击后稍微放大一点点 */
+    z-index: 10;
 }
 
-.calendar-day.today { background: rgba(96, 165, 250, 0.1); border: 1px dashed rgba(96, 165, 250, 0.5); }
-.day-num { position: absolute; top: 8px; right: 10px; font-size: 0.75rem; color: #64748b; }
-.day-mood { font-size: 2rem; }
+/* 压力背景色 (只对过去/今天生效) */
+.stress-low { background: rgba(74, 222, 128, 0.2) !important; }
+.stress-mid { background: rgba(250, 204, 21, 0.2) !important; }
+.stress-high { background: rgba(248, 113, 113, 0.2) !important; }
 
-/* 压力背景色 */
-.stress-low { background: rgba(74, 222, 128, 0.15) !important; }
-.stress-mid { background: rgba(250, 204, 21, 0.15) !important; }
-.stress-high { background: rgba(248, 113, 113, 0.15) !important; }
+/* 未来 Note 的专属颜色：靛蓝色/紫色 */
+.future-note-cell { 
+    background: rgba(129, 140, 248, 0.3) !important; 
+    border-color: rgba(129, 140, 248, 0.6) !important; 
+}
 
-/* 禁用状态：不仅变灰，且彻底禁止点击 */
+/* 禁用状态逻辑 */
 .u-disabled { 
     opacity: 0.2 !important; 
     pointer-events: none !important; 
-    filter: grayscale(1);
     cursor: not-allowed !important;
-}
-
-/* 未来日期提示文字 */
-#future-hint {
-    font-size: 0.75rem;
-    color: #facc15;
-    margin-bottom: 10px;
-    display: none; /* 默认隐藏 */
-}
-
-/* 未来 Note 的专属颜色：靛蓝色，区别于红黄绿 */
-.future-note-cell { 
-    background: rgba(129, 140, 248, 0.2) !important; 
-    border-color: rgba(129, 140, 248, 0.4) !important; 
 }

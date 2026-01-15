@@ -44,23 +44,34 @@ function render() {
     const todayStr = new Date().toISOString().split('T')[0];
 
     for(let d=1; d<=days; d++) {
+        for(let d=1; d<=days; d++) {
         const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
         const cell = document.createElement("div");
         cell.className = "calendar-day";
         
-        // 渲染压力颜色
+        const isFuture = dateStr > todayStr; // 判断是否是未来
+
+        // --- 修改后的颜色逻辑 ---
         if (moodData[dateStr]) {
-            const s = parseInt(moodData[dateStr].stress);
-            if (s <= 3) cell.classList.add("stress-low");
-            else if (s <= 7) cell.classList.add("stress-mid");
-            else cell.classList.add("stress-high");
+            if (isFuture) {
+                // 如果是未来且有数据(Note)，使用紫色
+                cell.classList.add("future-note-cell");
+            } else {
+                // 如果是今天或过去，才根据压力值判断颜色
+                const s = parseInt(moodData[dateStr].stress);
+                if (s <= 3) cell.classList.add("stress-low");
+                else if (s <= 7) cell.classList.add("stress-mid");
+                else cell.classList.add("stress-high");
+            }
         }
 
-        // 选中状态
+        // 选中和今天的状态保持不变
         if (dateStr === selectedDateStr) cell.classList.add("active");
         if (dateStr === todayStr) cell.classList.add("today");
         
         cell.innerHTML = `<span class="day-num">${d}</span>`;
+        
+        // 渲染表情（未来日期通常没有表情）
         if (moodData[dateStr] && moodData[dateStr].emoji) {
             const mDiv = document.createElement("div");
             mDiv.className = "day-mood";
@@ -71,7 +82,7 @@ function render() {
         cell.onclick = () => {
             selectedDateStr = dateStr;
             updateEditorUI(dateStr); 
-            render(); // 重新渲染以更新 active 状态
+            render(); 
         };
         cal.appendChild(cell);
     }

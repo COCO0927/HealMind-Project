@@ -65,3 +65,12 @@ body {
 .calendar-day.today { background: rgba(96, 165, 250, 0.2); }
 .day-num { position: absolute; top: 8px; right: 10px; font-size: 0.75rem; color: #64748b; }
 .day-mood { font-size: 2rem; }
+
+//新增
+/* 压力程度对应的格子背景色 (带透明度的玻璃感) */
+.stress-low { background: rgba(74, 222, 128, 0.2) !important; border-color: rgba(74, 222, 128, 0.4) !important; }    /* 绿色 */
+.stress-mid { background: rgba(250, 204, 21, 0.2) !important; border-color: rgba(250, 204, 21, 0.4) !important; }    /* 黄色 */
+.stress-high { background: rgba(248, 113, 113, 0.2) !important; border-color: rgba(248, 113, 113, 0.4) !important; } /* 红色 */
+
+/* 禁用状态的样式 */
+.u-disabled { opacity: 0.3; pointer-events: none; cursor: not-allowed; }
